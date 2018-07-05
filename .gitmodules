@@ -1,0 +1,3 @@
+[submodule "ECOLOGWebAPI/SensorLogInserterRe"]
+	path = ECOLOGWebAPI/SensorLogInserterRe
+	url = http://github.com/kaihuu/SensorLogInserterRe
