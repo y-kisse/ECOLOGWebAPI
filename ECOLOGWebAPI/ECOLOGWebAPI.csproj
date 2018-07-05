@@ -5,11 +5,58 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="SensorLogInserterRe\SensorLogInserterRe\Handlers\**" />
+    <Compile Remove="SensorLogInserterRe\SensorLogInserterRe\InfrastructureAssemblies\**" />
+    <Compile Remove="SensorLogInserterRe\SensorLogInserterRe\Inserters\**" />
+    <Compile Remove="SensorLogInserterRe\SensorLogInserterRe\Properties\**" />
+    <Compile Remove="SensorLogInserterRe\SensorLogInserterRe\ViewModels\**" />
+    <Compile Remove="SensorLogInserterRe\SensorLogInserterRe\Views\**" />
+    <Content Remove="SensorLogInserterRe\SensorLogInserterRe\Handlers\**" />
+    <Content Remove="SensorLogInserterRe\SensorLogInserterRe\InfrastructureAssemblies\**" />
+    <Content Remove="SensorLogInserterRe\SensorLogInserterRe\Inserters\**" />
+    <Content Remove="SensorLogInserterRe\SensorLogInserterRe\Properties\**" />
+    <Content Remove="SensorLogInserterRe\SensorLogInserterRe\ViewModels\**" />
+    <Content Remove="SensorLogInserterRe\SensorLogInserterRe\Views\**" />
+    <EmbeddedResource Remove="SensorLogInserterRe\SensorLogInserterRe\Handlers\**" />
+    <EmbeddedResource Remove="SensorLogInserterRe\SensorLogInserterRe\InfrastructureAssemblies\**" />
+    <EmbeddedResource Remove="SensorLogInserterRe\SensorLogInserterRe\Inserters\**" />
+    <EmbeddedResource Remove="SensorLogInserterRe\SensorLogInserterRe\Properties\**" />
+    <EmbeddedResource Remove="SensorLogInserterRe\SensorLogInserterRe\ViewModels\**" />
+    <EmbeddedResource Remove="SensorLogInserterRe\SensorLogInserterRe\Views\**" />
+    <None Remove="SensorLogInserterRe\SensorLogInserterRe\Handlers\**" />
+    <None Remove="SensorLogInserterRe\SensorLogInserterRe\InfrastructureAssemblies\**" />
+    <None Remove="SensorLogInserterRe\SensorLogInserterRe\Inserters\**" />
+    <None Remove="SensorLogInserterRe\SensorLogInserterRe\Properties\**" />
+    <None Remove="SensorLogInserterRe\SensorLogInserterRe\ViewModels\**" />
+    <None Remove="SensorLogInserterRe\SensorLogInserterRe\Views\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="SensorLogInserterRe\SensorLogInserterRe\App.xaml.cs" />
+    <Compile Remove="SensorLogInserterRe\SensorLogInserterRe\DynamicJson.cs" />
+    <Compile Remove="SensorLogInserterRe\SensorLogInserterRe\Utils\SlackUtil.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="SensorLogInserterRe\SensorLogInserterRe\packages.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="SensorLogInserterRe\SensorLogInserterRe\App.xaml" />
+    <None Remove="SensorLogInserterRe\SensorLogInserterRe\無名.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="LivetCask" Version="1.3.1" />
+    <PackageReference Include="LivetExtensions" Version="1.1.0" />
+    <PackageReference Include="MathNet.Numerics" Version="4.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Device.Location.Portable" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
