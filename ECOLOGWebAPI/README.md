@@ -17,6 +17,7 @@ Submoduleとして、SensorlogInserterを利用している.
 - Microsoft.AspNetCore.All
 - Microsoft.NETCore.App
 - Microsoft.VisualStudio.Web.CodeGeneration.Design
+- Newtonsoft.Json
 
 ### SensorLogInserterRe
 - LivetCask
