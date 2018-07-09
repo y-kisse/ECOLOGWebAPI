@@ -55,6 +55,7 @@
     <PackageReference Include="LivetExtensions" Version="1.1.0" />
     <PackageReference Include="MathNet.Numerics" Version="4.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Device.Location.Portable" Version="1.0.0" />
   </ItemGroup>

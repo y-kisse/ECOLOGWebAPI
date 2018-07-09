@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SensorLogInserterRe;
 
-namespace ECOLOGWebAPI.Controllers
+namespace ECOLOGWebAPI.APIControllers
 {
     [Route("api/[controller]")]
     public class ValuesController : Controller
