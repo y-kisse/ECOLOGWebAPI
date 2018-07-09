@@ -11,3 +11,16 @@ Submoduleとして、SensorlogInserterを利用している.
 (本来はsubmoduleの中でも必要なディレクトリのみをこちらのリポジトリに持ってきたかったが、上手く行かなかったためにこのような手法をとった。)  
 依存するNugetパッケージを1つずつ入れている。  
 
+## 依存NuGetパッケージ
+記入漏れ、記入ミス前提で参照願う。  
+### ECOLOGWebAPI本体
+- Microsoft.AspNetCore.All
+- Microsoft.NETCore.App
+- Microsoft.VisualStudio.Web.CodeGeneration.Design
+
+### SensorLogInserterRe
+- LivetCask
+- LivetExtensions
+- MathNet.Numerics
+- System.Data.DataSetExtensions
+- System.Device.Location.Portable
