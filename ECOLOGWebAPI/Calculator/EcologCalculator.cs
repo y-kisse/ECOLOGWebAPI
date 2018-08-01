@@ -31,6 +31,11 @@ namespace ECOLOGWebAPI.Calculator
 
             // Efficiency
 
+            // link and semantic_link
+            // 近傍リンクをSQLで指定、すべてのリンクに対して、GPS点とリンクの距離を求める
+            // 最近傍リンクまでの距離が閾値を超えない場合には、それをGPS点が通過するリンクとする
+
+
             return retTuple;
         }
     }
