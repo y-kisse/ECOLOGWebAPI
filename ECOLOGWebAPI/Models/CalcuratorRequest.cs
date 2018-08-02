@@ -13,6 +13,7 @@ namespace ECOLOGWebAPI.Models
         public int Driver { get; set; }
         public int Car { get; set; }
         public int Sensor { get; set; }
+        public string Direction { get; set; }
         IList<GPSTuple> GpsTuples { get; set; }
         public DateTime PostDate { get; set; }
     }
