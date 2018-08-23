@@ -5,6 +5,7 @@ using System.Data;
 using System.Threading.Tasks;
 using ECOLOGWebAPI.Models;
 using SensorLogInserterRe.Calculators;
+using SensorLogInserterRe.Models;
 
 namespace ECOLOGWebAPI.Calculator
 {
@@ -16,7 +17,12 @@ namespace ECOLOGWebAPI.Calculator
      */
     public class EcologCalculator
     {
-        public static ECOLOGTuple calculateEcologTuple(GPSTuple previusGPS, GPSTuple currentGPSTuple, DataTable roadLinks)
+        
+        private static readonly double WindSpeed = 0;
+        private static readonly double Rho = 1.22;
+        private static readonly double Myu = 0.015;
+
+        public static ECOLOGTuple calculateEcologTuple(GPSTuple previusGPS, GPSTuple currentGPSTuple, DataTable roadLinks, Car car)
         {
             // ECOLOGTupleの空のインスタンスを作成
             ECOLOGTuple retTuple = new ECOLOGTuple();
@@ -34,9 +40,75 @@ namespace ECOLOGWebAPI.Calculator
             Tuple<int, double> meshIdAltitudeTuple = altitudeCalculator.CalcAltitude(currentGPSTuple.Latitude, currentGPSTuple.Longitude);
             retTuple.TerrainAltitude = meshIdAltitudeTuple.Item2;
 
-            // 各種損失はSensorLogInserterReの計算メソッドを用いて算出する
+            // resistancePower
+            // TODO: 条件式変更(speed > 1 && distanceDiff > 0)
+            // TODO: 条件式同一のため、処理記述箇所を統合
+            double airResistancePower = 0;
+            if (currentGPSTuple.Speed > 1)
+                airResistancePower = AirResistanceCalculator.CalcPower(Rho,
+                                                                                              car.CdValue,
+                                                                                              car.FrontalProjectedArea,
+                                                                                              (currentGPSTuple.Speed + WindSpeed) / 3.6,
+                                                                                              currentGPSTuple.Speed / 3.6);
+
+            double rollingResistancePower = 0;
+            if (currentGPSTuple.Speed > 1)
+                rollingResistancePower = RollingResistanceCalculator.CalcPower(Myu,
+                                                                                                         car.Weight,
+                                                                                                         Math.Atan(0 / 1), // TODO: 前のタプルとの標高差と距離が角度求めるには必要。  
+                                                                                                         currentGPSTuple.Speed / 3.6);
+
+            double climbingResistancePower = 0;
+            if (currentGPSTuple.Speed > 1)
+                climbingResistancePower = ClimbingResistanceCalculator.CalcPower(car.Weight,
+                                                                                                              Math.Atan(0 / 1), // TODO: rollingResistancePowerと同様
+                                                                                                              currentGPSTuple.Speed / 3.6);
+
+            double accResitancePower = 0;
+            if (currentGPSTuple.Speed > 1)
+                accResitancePower = AccResistanceCalculator.CalcPower(previusGPS.Speed / 3.6,
+                                                                                              previusGPS.GpsTime,
+                                                                                              currentGPSTuple.Speed / 3.6,
+                                                                                              currentGPSTuple.GpsTime,
+                                                                                              car.Weight);
+
+            double drivingResistancePower = airResistancePower
+                                                           + rollingResistancePower
+                                                           + climbingResistancePower
+                                                           + accResitancePower;
+
+
+            // torque
+            double torque = 0;
+            if (drivingResistancePower > 0 && currentGPSTuple.Speed > 0)
+                torque = drivingResistancePower * 1000 * 3600 / (currentGPSTuple.Speed / 3.6) * car.TireRadius / car.ReductionRatio;
 
             // Efficiency
+            int efficiency = EfficiencyCalculator.GetInstance().GetEfficiency(car, currentGPSTuple.Speed / 3.6, torque);
+
+            // 各種損失はSensorLogInserterReの計算メソッドを用いて算出する
+            double convertLoss = ConvertLossCaluculator.CalcEnergy(drivingResistancePower,
+                                                                                           car,
+                                                                                           currentGPSTuple.Speed / 3.6,
+                                                                                           efficiency);
+
+            double regeneEnergy = RegeneEnergyCalculator.CalcEnergy(drivingResistancePower,
+                                                                                                currentGPSTuple.Speed / 3.6,
+                                                                                                car,
+                                                                                                efficiency);
+
+            double regeneLoss = RegeneLossCalculator.CalcEnergy(drivingResistancePower,
+                                                                                         regeneEnergy,
+                                                                                         car,
+                                                                                         currentGPSTuple.Speed / 3.6,
+                                                                                         efficiency);
+
+            double lostEnergy = LostEnergyCalculator.CalcEnergy(convertLoss, 
+                                                                                       regeneLoss, 
+                                                                                       airResistancePower, 
+                                                                                       rollingResistancePower);
+
+
 
 
             // link and semantic_link
