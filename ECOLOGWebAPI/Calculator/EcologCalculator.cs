@@ -51,37 +51,34 @@ namespace ECOLOGWebAPI.Calculator
 
 
 
-            // resistancePower
-            // TODO: 条件式変更(speed > 1 && distanceDiff > 0)
-            // TODO: 条件式同一のため、処理記述箇所を統合
+            // calculate resistancePower
             double airResistancePower = 0;
+            double rollingResistancePower = 0;
+            double climbingResistancePower = 0;
+            double accResitancePower = 0;
             if (currentGPSTuple.Speed > 1 && distanceDiff > 0)
+            {
                 airResistancePower = AirResistanceCalculator.CalcPower(Rho,
                                                                                               car.CdValue,
                                                                                               car.FrontalProjectedArea,
                                                                                               (currentGPSTuple.Speed + WindSpeed) / 3.6,
                                                                                               currentGPSTuple.Speed / 3.6);
 
-            double rollingResistancePower = 0;
-            if (currentGPSTuple.Speed > 1 && distanceDiff > 0)
                 rollingResistancePower = RollingResistanceCalculator.CalcPower(Myu,
                                                                                                          car.Weight,
                                                                                                          Math.Atan(altitudeDiff / distanceDiff), // TODO: 前のタプルとの標高差と距離が角度求めるには必要。  
                                                                                                          currentGPSTuple.Speed / 3.6);
 
-            double climbingResistancePower = 0;
-            if (currentGPSTuple.Speed > 1 && distanceDiff > 0)
                 climbingResistancePower = ClimbingResistanceCalculator.CalcPower(car.Weight,
                                                                                                               Math.Atan(altitudeDiff / distanceDiff), // TODO: rollingResistancePowerと同様
                                                                                                               currentGPSTuple.Speed / 3.6);
 
-            double accResitancePower = 0;
-            if (currentGPSTuple.Speed > 1 && distanceDiff > 0)
                 accResitancePower = AccResistanceCalculator.CalcPower(previusGPS.Speed / 3.6,
                                                                                               previusGPS.GpsTime,
                                                                                               currentGPSTuple.Speed / 3.6,
                                                                                               currentGPSTuple.GpsTime,
                                                                                               car.Weight);
+            }
 
             double drivingResistancePower = airResistancePower
                                                            + rollingResistancePower
