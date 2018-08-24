@@ -40,11 +40,22 @@ namespace ECOLOGWebAPI.Calculator
             Tuple<int, double> meshIdAltitudeTuple = altitudeCalculator.CalcAltitude(currentGPSTuple.Latitude, currentGPSTuple.Longitude);
             retTuple.TerrainAltitude = meshIdAltitudeTuple.Item2;
 
+            double previusAltitude = altitudeCalculator.CalcAltitude(previusGPS.Latitude, previusGPS.Longitude).Item2;
+            double altitudeDiff = retTuple.TerrainAltitude - previusAltitude;
+
+            // distance
+            double distanceDiff = DistanceCalculator.CalcDistance(previusGPS.Latitude,
+                                                                                      previusGPS.Longitude,
+                                                                                      currentGPSTuple.Latitude,
+                                                                                      currentGPSTuple.Longitude);
+
+
+
             // resistancePower
             // TODO: 条件式変更(speed > 1 && distanceDiff > 0)
             // TODO: 条件式同一のため、処理記述箇所を統合
             double airResistancePower = 0;
-            if (currentGPSTuple.Speed > 1)
+            if (currentGPSTuple.Speed > 1 && distanceDiff > 0)
                 airResistancePower = AirResistanceCalculator.CalcPower(Rho,
                                                                                               car.CdValue,
                                                                                               car.FrontalProjectedArea,
@@ -52,20 +63,20 @@ namespace ECOLOGWebAPI.Calculator
                                                                                               currentGPSTuple.Speed / 3.6);
 
             double rollingResistancePower = 0;
-            if (currentGPSTuple.Speed > 1)
+            if (currentGPSTuple.Speed > 1 && distanceDiff > 0)
                 rollingResistancePower = RollingResistanceCalculator.CalcPower(Myu,
                                                                                                          car.Weight,
-                                                                                                         Math.Atan(0 / 1), // TODO: 前のタプルとの標高差と距離が角度求めるには必要。  
+                                                                                                         Math.Atan(altitudeDiff / distanceDiff), // TODO: 前のタプルとの標高差と距離が角度求めるには必要。  
                                                                                                          currentGPSTuple.Speed / 3.6);
 
             double climbingResistancePower = 0;
-            if (currentGPSTuple.Speed > 1)
+            if (currentGPSTuple.Speed > 1 && distanceDiff > 0)
                 climbingResistancePower = ClimbingResistanceCalculator.CalcPower(car.Weight,
-                                                                                                              Math.Atan(0 / 1), // TODO: rollingResistancePowerと同様
+                                                                                                              Math.Atan(altitudeDiff / distanceDiff), // TODO: rollingResistancePowerと同様
                                                                                                               currentGPSTuple.Speed / 3.6);
 
             double accResitancePower = 0;
-            if (currentGPSTuple.Speed > 1)
+            if (currentGPSTuple.Speed > 1 && distanceDiff > 0)
                 accResitancePower = AccResistanceCalculator.CalcPower(previusGPS.Speed / 3.6,
                                                                                               previusGPS.GpsTime,
                                                                                               currentGPSTuple.Speed / 3.6,
