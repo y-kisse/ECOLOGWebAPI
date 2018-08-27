@@ -24,7 +24,7 @@ namespace ECOLOGWebAPI.Calculator
         public string Direction { get; set; }
         private DataTable _linkTable;
 
-        public LinkDetector()
+        private LinkDetector()
         {
             // for singleton
         }
