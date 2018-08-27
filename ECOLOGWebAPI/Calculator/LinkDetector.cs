@@ -24,6 +24,11 @@ namespace ECOLOGWebAPI.Calculator
         public string Direction { get; set; }
         private DataTable _linkTable;
 
+        public LinkDetector()
+        {
+            // for singleton
+        }
+
         public static LinkDetector GetInstance(int driverID, string direction)
         {
             if (_instance == null)
