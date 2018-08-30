@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
 using SensorLogInserterRe.Daos;
+using SensorLogInserterRe.Models;
 
 namespace ECOLOGWebAPI.Calculator
 {
@@ -77,6 +79,62 @@ namespace ECOLOGWebAPI.Calculator
                 Direction = direction,
                 _linkTable = LinkDao.GetLinkTableforMM(semanticLinkIdArray)
             };
+        }
+
+        private static DataTable getLinkTable(int [] semanticLinkIdArray)
+        {
+            string semanticLinkStatement = "(";
+            foreach (int semanticLinkId in semanticLinkIdArray)
+            {
+                semanticLinkStatement += semanticLinkId + ",";
+            }
+
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.AppendLine("SELECT");
+            queryBuilder.AppendLine("    l1.LINK_ID AS LINK_ID,");
+            queryBuilder.AppendLine("    l1.NUM,");
+            queryBuilder.AppendLine("    ");
+
+            return new DataTable();
+        }
+
+        public Tuple<string, int> detect(double lat, double lng)
+        {
+            string linkId = "RB000000000x";
+            int semanticLinkId = -1;
+            double distance = 255;
+
+            // インスタンス変数のリンク集合から近傍リンクの絞り込み
+            string query = "START_LAT > " + (lat - 0.05);
+            query += " AND START_LAT < " + (lat + 0.05);
+            query += " AND START_LONG > " + (lng - 0.05);
+            query += " AND START_LOMG < " + (lng + 0.05);
+            DataRow[] dataRows = _linkTable.Select(query);
+
+            // 現在値をベクトル表現
+            TwoDimensionalVector currentPoint = new TwoDimensionalVector(lat, lng);
+            // 全探索
+            foreach (DataRow row in dataRows)
+            {
+                // リンクの始端終端をそれぞれベクトル表現
+                TwoDimensionalVector linkStartEdge = new TwoDimensionalVector((double)row["START_LAT"], (double)row["START_LONG"]);
+                TwoDimensionalVector linkEndEdge = new TwoDimensionalVector((double)row["END_LAT"], (double)row["END_LONG"]);
+
+                // ベクトル演算により現在値と着目しているリンクの最近傍点を得る
+                TwoDimensionalVector matchedPoint = TwoDimensionalVector.nearest(linkStartEdge, linkEndEdge, currentPoint);
+
+                // マッチ点と現在地の距離
+                double tempDist = TwoDimensionalVector.distance(currentPoint, matchedPoint);
+
+                if (tempDist < distance)
+                {
+                    distance = tempDist;
+                    linkId = (string)row["LINK_ID"];
+                    semanticLinkId = (int)row["SEMANTIC_LINK_ID"];
+                }
+            }
+
+            return new Tuple<string, int>(linkId, semanticLinkId);
         }
 
         // GPSデータ点と、driver_idから最近傍リンクとセマンティックリンクを求める
