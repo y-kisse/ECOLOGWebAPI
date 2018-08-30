@@ -18,7 +18,7 @@ namespace ECOLOGWebAPI.Calculator
     public class EcologCalculator
     {
         
-        private static readonly double WindSpeed = 0;
+        private static readonly double WindSpeed = 0;  // TODO: 対気速度の導入
         private static readonly double Rho = 1.22;
         private static readonly double Myu = 0.015;
 
